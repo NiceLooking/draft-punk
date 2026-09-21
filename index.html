@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#090a0c">
+    <meta
+        name="description"
+        content="Draft Punk — бар в стиле киберпанк в Волжском. Крафтовое пиво, настойки, закуски, настольные игры и бронирование столиков."
+    >
+
+    <title>Draft Punk — киберпанк-бар в Волжском</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        night: "#090a0c",
+                        lime: "#d7ff3f",
+                        acid: "#b9f227",
+                        cyber: "#8b5cf6",
+                        hot: "#ff3864"
+                    },
+                    fontFamily: {
+                        sans: ["Manrope", "sans-serif"],
+                        mono: ["IBM Plex Mono", "monospace"]
+                    }
+                }
+            }
+        };
+    </script>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --bg: #090a0c;
+            --panel: #111318;
+            --panel-light: #171a20;
+            --lime: #d7ff3f;
+            --violet: #8b5cf6;
+            --pink: #ff3864;
+            --muted: #91969f;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 90px;
+        }
+
+        body {
+            margin: 0;
+            min-width: 320px;
+            overflow-x: hidden;
+            color: #f5f5f5;
+            background:
+                radial-gradient(circle at 80% 0%, rgba(139, 92, 246, .14), transparent 28rem),
+                radial-gradient(circle at 0% 35%, rgba(215, 255, 63, .06), transparent 25rem),
+                var(--bg);
+            font-family: "Manrope", sans-serif;
+        }
+
+        ::selection {
+            color: #090a0c;
+            background: var(--lime);
+        }
+
+        a,
+        button,
+        input,
+        textarea {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        a:focus-visible,
+        button:focus-visible,
+        input:focus-visible,
+        textarea:focus-visible {
+            outline: 2px solid var(--lime);
+            outline-offset: 4px;
+        }
+
+        .mono {
+            font-family: "IBM Plex Mono", monospace;
+        }
+
+        .grid-bg {
+            position: fixed;
+            z-index: -3;
+            inset: 0;
+            pointer-events: none;
+            opacity: .2;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, .035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, .035) 1px, transparent 1px);
+            background-size: 70px 70px;
+            mask-image: linear-gradient(to bottom, #000 0%, transparent 90%);
+        }
+
+        .noise {
+            position: fixed;
+            z-index: -2;
+            inset: 0;
+            pointer-events: none;
+            opacity: .028;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        .topbar {
+            background: rgba(9, 10, 12, .78);
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
+
+        .glass {
+            background:
+                linear-gradient(145deg, rgba(255,255,255,.075), rgba(255,255,255,.025));
+            border: 1px solid rgba(255,255,255,.11);
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,.06),
+                0 24px 80px rgba(0,0,0,.24);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
+
+        .lime-button {
+            position: relative;
+            isolation: isolate;
+            overflow: hidden;
+            color: #090a0c;
+            background: var(--lime);
+            box-shadow: 0 12px 38px rgba(215, 255, 63, .18);
+            transition:
+                transform .3s ease,
+                box-shadow .3s ease,
+                background-color .3s ease;
+        }
+
+        .lime-button::before {
+            content: "";
+            position: absolute;
+            z-index: -1;
+            top: -100%;
+            left: -45%;
+            width: 35%;
+            height: 300%;
+            transform: rotate(25deg);
+            background: rgba(255,255,255,.7);
+            transition: left .6s ease;
+        }
+
+        .lime-button:hover {
+            transform: translateY(-3px);
+            background: #e6ff76;
+            box-shadow: 0 18px 48px rgba(215, 255, 63, .32);
+        }
+
+        .lime-button:hover::before {
+            left: 125%;
+        }
+
+        .outline-button {
+            border: 1px solid rgba(255, 255, 255, .16);
+            background: rgba(255,255,255,.04);
+            transition:
+                transform .3s ease,
+                background-color .3s ease,
+                border-color .3s ease;
+        }
+
+        .outline-button:hover {
+            transform: translateY(-3px);
+            border-color: rgba(215, 255, 63, .5);
+            background: rgba(215, 255, 63, .08);
+        }
+
+        .accent-text {
+            color: transparent;
+            background: linear-gradient(100deg, var(--lime), #ffffff 45%, #c4b5fd);
+            background-clip: text;
+            -webkit-background-clip: text;
+        }
+
+        .scanline {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: .13;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent 0,
+                transparent 4px,
+                rgba(255,255,255,.07) 5px,
+                transparent 6px
+            );
+        }
+
+        .hero-image {
+            position: relative;
+            min-height: 530px;
+            overflow: hidden;
+            background:
+                linear-gradient(135deg, rgba(139,92,246,.22), transparent 40%),
+                linear-gradient(135deg, #24252d, #0d0e12 65%);
+        }
+
+        .hero-image img,
+        .photo-card img,
+        .street-photo img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform .8s cubic-bezier(.2,.7,.2,1), opacity .35s ease;
+        }
+
+        .hero-image:hover img,
+        .photo-card:hover img,
+        .street-photo:hover img {
+            transform: scale(1.06);
+        }
+
+        .image-overlay {
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(to top, rgba(0,0,0,.85), transparent 58%),
+                linear-gradient(120deg, rgba(139,92,246,.32), transparent 50%);
+        }
+
+        .image-placeholder {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            color: rgba(255,255,255,.52);
+            text-align: center;
+            background:
+                radial-gradient(circle at 30% 20%, rgba(215,255,63,.12), transparent 25%),
+                linear-gradient(135deg, #23252d, #0d0e12);
+        }
+
+        .image-placeholder strong {
+            display: block;
+            color: var(--lime);
+            font: 600 12px/1.5 "IBM Plex Mono", monospace;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+        }
+
+        .image-placeholder span {
+            display: block;
+            margin-top: 8px;
+            font-size: 12px;
+        }
+
+        .image-placeholder.hidden {
+            display: none;
+        }
+
+        .photo-card {
+            position: relative;
+            min-height: 280px;
+            overflow: hidden;
+            background: #171920;
+        }
+
+        .photo-card .photo-caption,
+        .street-photo .photo-caption {
+            position: absolute;
+            z-index: 2;
+            right: 16px;
+            bottom: 16px;
+            left: 16px;
+        }
+
+        .photo-card .photo-caption span,
+        .street-photo .photo-caption span {
+            display: inline-flex;
+            padding: 7px 10px;
+            color: #d7ff3f;
+            border: 1px solid rgba(215,255,63,.24);
+            border-radius: 999px;
+            background: rgba(9,10,12,.7);
+            font: 500 10px "IBM Plex Mono", monospace;
+            backdrop-filter: blur(12px);
+        }
+
+        .photo-card .photo-caption p,
+        .street-photo .photo-caption p {
+            margin: 9px 0 0;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .hover-card {
+            transition:
+                transform .35s ease,
+                border-color .35s ease,
+                background-color .35s ease;
+        }
+
+        .hover-card:hover {
+            transform: translateY(-7px);
+            border-color: rgba(215,255,63,.35);
+            background-color: rgba(215,255,63,.055);
+        }
+
+        .glitch {
+            position: relative;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        .glitch:hover::before {
+            opacity: .5;
+            color: #ff3864;
+            transform: translate(2px, -1px);
+            clip-path: inset(20% 0 55% 0);
+        }
+
+        .glitch:hover::after {
+            opacity: .5;
+            color: #22d3ee;
+            transform: translate(-2px, 1px);
+            clip-path: inset(62% 0 12% 0);
+        }
+
+        .ticker {
+            width: max-content;
+            animation: ticker 24s linear infinite;
+        }
+
+        @keyframes ticker {
+            to {
+                transform: translateX(-50%);
+            }
+        }
+
+        .pulse-dot {
+            position: relative;
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: var(--lime);
+            box-shadow: 0 0 16px var(--lime);
+        }
+
+        .pulse-dot::after {
+            content: "";
+            position: absolute;
+            inset: -5px;
+            border: 1px solid rgba(215,255,63,.7);
+            border-radius: inherit;
+            animation: pulse-ring 2s ease-out infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                opacity: 1;
+                transform: scale(.65);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(1.7);
+            }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity .8s ease, transform .8s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .faq-answer {
+            display: grid;
+            grid-template-rows: 0fr;
+            opacity: 0;
+            transition: grid-template-rows .35s ease, opacity .35s ease;
+        }
+
+        .faq-answer > div {
+            overflow: hidden;
+        }
+
+        .faq-item.open .faq-answer {
+            grid-template-rows: 1fr;
+            opacity: 1;
+        }
+
+        .faq-icon {
+            transition: transform .3s ease, background-color .3s ease;
+        }
+
+        .faq-item.open .faq-icon {
+            transform: rotate(45deg);
+            background: rgba(215,255,63,.15);
+        }
+
+        .input {
+            width: 100%;
+            color: white;
+            border: 1px solid rgba(255,255,255,.12);
+            background: rgba(255,255,255,.04);
+            transition: border-color .25s ease, box-shadow .25s ease;
+        }
+
+        .input::placeholder {
+            color: #656a74;
+        }
+
+        .input:focus {
+            outline: none;
+            border-color: rgba(215,255,63,.65);
+            box-shadow: 0 0 0 4px rgba(215,255,63,.1);
+        }
+
+        @media (max-width: 767px) {
+            .hero-image {
+                min-height: 410px;
+            }
+
+            .ticker {
+                animation-duration: 18s;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: .01ms !important;
+            }
+
+            .reveal {
+                opacity: 1;
+                transform: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="grid-bg" aria-hidden="true"></div>
+    <div class="noise" aria-hidden="true"></div>
+
+    <!-- HEADER -->
+    <header class="topbar fixed left-0 right-0 top-0 z-50">
+        <div class="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 sm:px-8">
+            <a href="#home" class="flex items-center gap-3" aria-label="Draft Punk">
+                <span class="grid h-10 w-10 place-items-center rounded-xl border border-lime/30 bg-lime/10">
+                    <span class="h-4 w-4 rotate-45 border-2 border-lime"></span>
+                </span>
+
+                <span>
+                    <span class="block text-sm font-extrabold tracking-[.12em]">DRAFT PUNK</span>
+                    <span class="mono mt-1 block text-[9px] uppercase tracking-[.2em] text-zinc-500">
+                        bar / volzhsky
+                    </span>
+                </span>
+            </a>
+
+            <nav class="hidden items-center gap-7 text-sm text-zinc-400 lg:flex">
+                <a href="#about" class="transition hover:text-lime">О баре</a>
+                <a href="#menu" class="transition hover:text-lime">Меню</a>
+                <a href="#gallery" class="transition hover:text-lime">Атмосфера</a>
+                <a href="#location" class="transition hover:text-lime">Как добраться</a>
+            </nav>
+
+            <div class="flex items-center gap-2">
+                <a
+                    href="tel:+79375561984"
+                    class="lime-button hidden items-center gap-2 rounded-xl px-4 py-3 text-sm font-extrabold sm:inline-flex"
+                >
+                    <i data-lucide="phone" class="h-4 w-4"></i>
+                    Забронировать
+                </a>
+
+                <button
+                    id="menuButton"
+                    type="button"
+                    class="grid h-11 w-11 place-items-center rounded-xl border border-white/10 bg-white/[.04] lg:hidden"
+                    aria-label="Открыть меню"
+                    aria-expanded="false"
+                >
+                    <i data-lucide="menu" class="h-5 w-5"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobileMenu" class="mx-4 mb-3 hidden rounded-2xl border border-white/10 bg-[#111318]/95 p-3 backdrop-blur-xl lg:hidden">
+            <nav class="grid gap-1 text-sm">
+                <a href="#about" class="mobile-link rounded-xl px-4 py-3 text-zinc-300 hover:bg-white/5">О баре</a>
+                <a href="#menu" class="mobile-link rounded-xl px-4 py-3 text-zinc-300 hover:bg-white/5">Меню</a>
+                <a href="#gallery" class="mobile-link rounded-xl px-4 py-3 text-zinc-300 hover:bg-white/5">Атмосфера</a>
+                <a href="#location" class="mobile-link rounded-xl px-4 py-3 text-zinc-300 hover:bg-white/5">Как добраться</a>
+
+                <a
+                    href="tel:+79375561984"
+                    class="mt-2 flex items-center justify-center gap-2 rounded-xl bg-lime px-4 py-3 font-extrabold text-night"
+                >
+                    <i data-lucide="phone" class="h-4 w-4"></i>
+                    Забронировать столик
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- HERO -->
+        <section id="home" class="relative overflow-hidden px-5 pb-20 pt-32 sm:px-8 sm:pt-40">
+            <div class="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[.92fr_1.08fr] lg:gap-16">
+                <div class="reveal">
+                    <div class="mb-7 inline-flex items-center gap-3 rounded-full border border-lime/20 bg-lime/[.07] px-3 py-2">
+                        <span class="pulse-dot"></span>
+                        <span class="mono text-[10px] font-medium uppercase tracking-[.14em] text-lime">
+                            cyberpunk bar / volzhsky
+                        </span>
+                    </div>
+
+                    <h1 class="max-w-3xl text-[clamp(3.4rem,8vw,7.8rem)] font-extrabold leading-[.87] tracking-[-.08em]">
+                        Место,
+                        <span class="accent-text glitch" data-text="где ночь">где ночь</span>
+                        звучит громче
+                    </h1>
+
+                    <p class="mt-8 max-w-xl text-base leading-8 text-zinc-400 sm:text-lg">
+                        Draft Punk — бар в стиле киберпанк в Волжском.
+                        Крафтовое пиво, настойки, закуски, настольные игры
+                        и атмосфера, ради которой хочется остаться ещё на один раунд.
+                    </p>
+
+                    <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+                        <a
+                            href="tel:+79375561984"
+                            class="lime-button inline-flex items-center justify-center gap-3 rounded-2xl px-6 py-4 text-sm font-extrabold"
+                        >
+                            <i data-lucide="phone-call" class="h-5 w-5"></i>
+                            Забронировать столик
+                        </a>
+
+                        <a
+                            href="#menu"
+                            class="outline-button inline-flex items-center justify-center gap-3 rounded-2xl px-6 py-4 text-sm font-bold"
+                        >
+                            Посмотреть меню
+                            <i data-lucide="arrow-down" class="h-4 w-4"></i>
+                        </a>
+                    </div>
+
+                    <div class="mt-9 flex flex-wrap gap-x-6 gap-y-3 text-xs text-zinc-500">
+                        <span class="flex items-center gap-2">
+                            <i data-lucide="beer" class="h-4 w-4 text-lime"></i>
+                            Крафтовое пиво
+                        </span>
+
+                        <span class="flex items-center gap-2">
+                            <i data-lucide="dog" class="h-4 w-4 text-lime"></i>
+                            Можно с собаками
+                        </span>
+
+                        <span class="flex items-center gap-2">
+                            <i data-lucide="credit-card" class="h-4 w-4 text-lime"></i>
+                            Оплата картой
+                        </span>
+                    </div>
+                </div>
+
+                <div class="reveal">
+                    <!--
+                        ФОТО HERO:
+                        добавьте файл images/hero-bar.jpg
+                    -->
+                    <div class="hero-image glass rounded-[30px]">
+                        <img
+                            src="images/hero-bar.jpg"
+                            alt="Интерьер бара Draft Punk"
+                            data-fallback="hero"
+                        >
+
+                        <div class="image-placeholder">
+                            <div>
+                                <i data-lucide="image" class="mx-auto mb-4 h-10 w-10 text-lime/60"></i>
+                                <strong>images/hero-bar.jpg</strong>
+                                <span>Главное атмосферное фото бара</span>
+                            </div>
+                        </div>
+
+                        <div class="image-overlay"></div>
+                        <div class="scanline"></div>
+
+                        <div class="absolute left-5 top-5 flex items-center gap-2 rounded-full border border-white/10 bg-black/40 px-3 py-2 backdrop-blur-xl">
+                            <span class="h-2 w-2 rounded-full bg-lime shadow-[0_0_12px_#d7ff3f]"></span>
+                            <span class="mono text-[10px] uppercase tracking-[.12em] text-zinc-300">
+                                signal detected
+                            </span>
+                        </div>
+
+                        <div class="absolute bottom-6 left-6 right-6">
+                            <p class="mono text-xs uppercase tracking-[.16em] text-lime">
+                                Draft Punk / 01
+                            </p>
+                            <p class="mt-3 max-w-md text-3xl font-extrabold leading-tight tracking-[-.05em] sm:text-5xl">
+                                Здесь у каждого вечера есть свой саундтрек
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mx-auto mt-20 max-w-7xl border-t border-white/[.08] pt-5">
+                <div class="ticker flex items-center gap-10 text-xs font-semibold uppercase tracking-[.2em] text-zinc-600">
+                    <span>craft beer</span>
+                    <span class="text-lime">✦</span>
+                    <span>infusions</span>
+                    <span class="text-hot">✦</span>
+                    <span>board games</span>
+                    <span class="text-cyber">✦</span>
+                    <span>snacks</span>
+                    <span class="text-lime">✦</span>
+                    <span>good people</span>
+                    <span class="text-hot">✦</span>
+
+                    <span aria-hidden="true">craft beer</span>
+                    <span aria-hidden="true" class="text-lime">✦</span>
+                    <span aria-hidden="true">infusions</span>
+                    <span aria-hidden="true" class="text-hot">✦</span>
+                    <span aria-hidden="true">board games</span>
+                    <span aria-hidden="true" class="text-cyber">✦</span>
+                    <span aria-hidden="true">snacks</span>
+                    <span aria-hidden="true" class="text-lime">✦</span>
+                    <span aria-hidden="true">good people</span>
+                    <span aria-hidden="true" class="text-hot">✦</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT -->
+        <section id="about" class="px-5 py-24 sm:px-8 lg:py-32">
+            <div class="mx-auto max-w-7xl">
+                <div class="reveal max-w-3xl">
+                    <p class="mono text-xs uppercase tracking-[.18em] text-lime">/ about the place</p>
+
+                    <h2 class="mt-5 text-4xl font-extrabold leading-tight tracking-[-.06em] sm:text-6xl">
+                        Не просто выпить.
+                        <span class="text-zinc-600">Зайти в другой режим.</span>
+                    </h2>
+
+                    <p class="mt-6 max-w-2xl text-base leading-8 text-zinc-400">
+                        Draft Punk — пространство для тех, кто любит хороший напиток,
+                        необычную атмосферу и разговоры, которые могут продолжаться до закрытия.
+                        Выбирайте столик, собирайте компанию и приходите за своим вечером.
+                    </p>
+                </div>
+
+                <div class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                    <article class="glass hover-card reveal rounded-3xl p-6">
+                        <span class="grid h-12 w-12 place-items-center rounded-2xl bg-lime/10 text-lime">
+                            <i data-lucide="beer" class="h-6 w-6"></i>
+                        </span>
+                        <h3 class="mt-7 text-xl font-extrabold">Крафт</h3>
+                        <p class="mt-3 text-sm leading-7 text-zinc-500">
+                            Разные стили пива для спокойного вечера и смелых экспериментов.
+                        </p>
+                    </article>
+
+                    <article class="glass hover-card reveal rounded-3xl p-6">
+                        <span class="grid h-12 w-12 place-items-center rounded-2xl bg-cyber/15 text-violet-300">
+                            <i data-lucide="flask-conical" class="h-6 w-6"></i>
+                        </span>
+                        <h3 class="mt-7 text-xl font-extrabold">Настойки</h3>
+                        <p class="mt-3 text-sm leading-7 text-zinc-500">
+                            Авторские вкусы, которые интересно пробовать и обсуждать вместе.
+                        </p>
+                    </article>
+
+                    <article class="glass hover-card reveal rounded-3xl p-6">
+                        <span class="grid h-12 w-12 place-items-center rounded-2xl bg-hot/10 text-pink-300">
+                            <i data-lucide="utensils" class="h-6 w-6"></i>
+                        </span>
+                        <h3 class="mt-7 text-xl font-extrabold">Закуски</h3>
+                        <p class="mt-3 text-sm leading-7 text-zinc-500">
+                            Еда к напиткам и возможность взять заказ с собой.
+                        </p>
+                    </article>
+
+                    <article class="glass hover-card reveal rounded-3xl p-6">
+                        <span class="grid h-12 w-12 place-items-center rounded-2xl bg-sky-400/10 text-sky-300">
+                            <i data-lucide="dice-5" class="h-6 w-6"></i>
+                        </span>
+                        <h3 class="mt-7 text-xl font-extrabold">Игры</h3>
+                        <p class="mt-3 text-sm leading-7 text-zinc-500">
+                            Настольные игры для компании, которая пришла не просто посидеть.
+                        </p>
+                    </article>
+                </div>
+
+                <div class="reveal mt-5 grid gap-5 lg:grid-cols-[1.1fr_.9fr]">
+                    <div class="glass rounded-3xl p-7 sm:p-9">
+                        <div class="flex items-center justify-between">
+                            <p class="mono text-xs uppercase tracking-[.16em] text-zinc-500">
+                                access protocol
+                            </p>
+                            <i data-lucide="radio" class="h-5 w-5 text-lime"></i>
+                        </div>
+
+                        <h3 class="mt-8 max-w-xl text-3xl font-extrabold leading-tight tracking-[-.05em] sm:text-4xl">
+                            Берите друзей, выбирайте игру и занимайте свой сектор
+                        </h3>
+
+                        <p class="mt-5 max-w-xl leading-7 text-zinc-400">
+                            В Draft Punk можно прийти компанией, заказать напитки и закуски,
+                            поиграть в настолки и просто провести вечер в необычном месте.
+                        </p>
+
+                        <a
+                            href="tel:+79375561984"
+                            class="mt-8 inline-flex items-center gap-2 font-bold text-lime transition hover:text-white"
+                        >
+                            Забронировать по телефону
+                            <i data-lucide="arrow-up-right" class="h-4 w-4"></i>
+                        </a>
+                    </div>
+
+                    <div class="glass rounded-3xl p-7 sm:p-9">
+                        <p class="mono text-xs uppercase tracking-[.16em] text-zinc-500">
+                            important note
+                        </p>
+
+                        <div class="mt-8 flex gap-4">
+                            <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-lime/10 text-lime">
+                                <i data-lucide="dog" class="h-5 w-5"></i>
+                            </span>
+
+                            <div>
+                                <h3 class="font-extrabold">Можно с собаками</h3>
+                                <p class="mt-2 text-sm leading-7 text-zinc-500">
+                                    Посещение с собаками разрешено. Для остальных животных вход закрыт.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="mt-7 border-t border-white/[.08] pt-7">
+                            <div class="flex items-center gap-4">
+                                <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-white/[.05] text-zinc-300">
+                                    <i data-lucide="credit-card" class="h-5 w-5"></i>
+                                </span>
+
+                                <div>
+                                    <h3 class="font-extrabold">Оплата картой</h3>
+                                    <p class="mt-2 text-sm leading-7 text-zinc-500">
+                                        В заведении доступна оплата банковской картой.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MENU -->
+        <section id="menu" class="px-5 py-24 sm:px-8 lg:py-32">
+            <div class="mx-auto max-w-7xl">
+                <div class="reveal flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+                    <div>
+                        <p class="mono text-xs uppercase tracking-[.18em] text-lime">/ menu modules</p>
+
+                        <h2 class="mt-5 text-4xl font-extrabold tracking-[-.06em] sm:text-6xl">
+                            Соберите свой
+                            <span class="accent-text">вечер</span>
+                        </h2>
+                    </div>
+
+                    <p class="max-w-md text-sm leading-7 text-zinc-500">
+                        Здесь можно разместить актуальное меню, цены и сезонные позиции.
+                        Сейчас блок подготовлен как демонстрационная структура.
+                    </p>
+                </div>
+
+                <div class="mt-14 grid gap-5 lg:grid-cols-3">
+                    <article class="glass hover-card reveal rounded-3xl p-6 sm:p-7">
+                        <div class="flex items-center justify-between">
+                            <span class="mono text-xs text-lime">01 / DRAFT</span>
+                            <i data-lucide="beer" class="h-5 w-5 text-zinc-500"></i>
+                        </div>
+
+                        <h3 class="mt-12 text-2xl font-extrabold">Пиво</h3>
+
+                        <div class="mt-7 space-y-4 text-sm">
+                            <div class="flex items-center justify-between border-b border-white/[.08] pb-3">
+                                <span class="text-zinc-400">Крафтовые сорта</span>
+                                <span class="mono text-xs text-zinc-600">актуально в баре</span>
+                            </div>
+                            <div class="flex items-center justify-between border-b border-white/[.08] pb-3">
+                                <span class="text-zinc-400">Сезонные позиции</span>
+                                <span class="mono text-xs text-zinc-600">уточнить</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-zinc-400">Разливное / бутылочное</span>
+                                <span class="mono text-xs text-zinc-600">уточнить</span>
+                            </div>
+                        </div>
+
+                        <p class="mt-8 text-xs leading-6 text-zinc-600">
+                            Для производства добавьте актуальные позиции и цены.
+                        </p>
+                    </article>
+
+                    <article class="glass hover-card reveal rounded-3xl p-6 sm:p-7">
+                        <div class="flex items-center justify-between">
+                            <span class="mono text-xs text-cyber">02 / MIX</span>
+                            <i data-lucide="flask-conical" class="h-5 w-5 text-zinc-500"></i>
+                        </div>
+
+                        <h3 class="mt-12 text-2xl font-extrabold">Настойки</h3>
+
+                        <div class="mt-7 space-y-4 text-sm">
+                            <div class="flex items-center justify-between border-b border-white/[.08] pb-3">
+                                <span class="text-zinc-400">Фирменные вкусы</span>
+                                <span class="mono text-xs text-zinc-600">актуально в баре</span>
+                            </div>
+                            <div class="flex items-center justify-between border-b border-white/[.08] pb-3">
+                                <span class="text-zinc-400">Сеты для компании</span>
+                                <span class="mono text-xs text-zinc-600">уточнить</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-zinc-400">Новые эксперименты</span>
+                                <span class="mono text-xs text-zinc-600">уточнить</span>
+                            </div>
+                        </div>
+
+                        <p class="mt-8 text-xs leading-6 text-zinc-600">
+                            Названия и стоимость легко обновляются в этом блоке.
+                        </p>
+                    </article>
+
+                    <article class="glass hover-card reveal rounded-3xl p-6 sm:p-7">
+                        <div class="flex items-center justify-between">
+                            <span class="mono text-xs text-hot">03 / SNACK</span>
+                            <i data-lucide="utensils" class="h-5 w-5 text-zinc-500"></i>
+                        </div>
+
+                        <h3 class="mt-12 text-2xl font-extrabold">Закуски</h3>
+
+                        <div class="mt-7 space-y-4 text-sm">
+                            <div class="flex items-center justify-between border-b border-white/[.08] pb-3">
+                                <span class="text-zinc-400">К пиву</span>
+                                <span class="mono text-xs text-zinc-600">актуально в баре</span>
+                            </div>
+                            <div class="flex items-center justify-between border-b border-white/[.08] pb-3">
+                                <span class="text-zinc-400">Для компании</span>
+                                <span class="mono text-xs text-zinc-600">уточнить</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-zinc-400">С собой</span>
+                                <span class="mono text-xs text-zinc-600">доступно</span>
+                            </div>
+                        </div>
+
+                        <p class="mt-8 text-xs leading-6 text-zinc-600">
+                            Заказ навынос можно отдельно подчеркнуть в производственной версии.
+                        </p>
+                    </article>
+                </div>
+
+                <div class="reveal mt-5 rounded-3xl border border-lime/20 bg-lime/[.06] p-6 sm:p-8">
+                    <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+                        <div class="flex items-start gap-4">
+                            <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-lime/10 text-lime">
+                                <i data-lucide="info" class="h-5 w-5"></i>
+                            </span>
+
+                            <div>
+                                <h3 class="font-extrabold">Актуальное меню — в баре</h3>
+                                <p class="mt-2 max-w-2xl text-sm leading-6 text-zinc-500">
+                                    Ассортимент и цены могут меняться. Позвоните, чтобы уточнить
+                                    наличие позиций и забронировать столик.
+                                </p>
+                            </div>
+                        </div>
+
+                        <a
+                            href="tel:+79375561984"
+                            class="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-lime px-4 py-3 text-sm font-extrabold text-night"
+                        >
+                            <i data-lucide="phone" class="h-4 w-4"></i>
+                            +7 (937) 556-19-84
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GALLERY -->
+        <section id="gallery" class="px-5 py-24 sm:px-8 lg:py-32">
+            <div class="mx-auto max-w-7xl">
+                <div class="reveal max-w-3xl">
+                    <p class="mono text-xs uppercase tracking-[.18em] text-lime">/ visual archive</p>
+
+                    <h2 class="mt-5 text-4xl font-extrabold tracking-[-.06em] sm:text-6xl">
+                        Посмотри,
+                        <span class="text-zinc-600">куда идёшь</span>
+                    </h2>
+
+                    <p class="mt-6 max-w-2xl leading-7 text-zinc-400">
+                        Загрузите реальные фотографии интерьера, бара, напитков и гостей,
+                        чтобы сайт сразу передавал характер Draft Punk.
+                    </p>
+                </div>
+
+                <div class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                    <!-- images/bar-interior.jpg -->
+                    <div class="photo-card glass reveal rounded-3xl sm:col-span-2 lg:row-span-2 lg:min-h-[580px]">
+                        <img src="images/bar-interior.jpg" alt="Интерьер Draft Punk" data-fallback="interior">
+
+                        <div class="image-placeholder">
+                            <div>
+                                <i data-lucide="image" class="mx-auto mb-4 h-9 w-9 text-lime/60"></i>
+                                <strong>images/bar-interior.jpg</strong>
+                                <span>Фото интерьера</span>
+                            </div>
+                        </div>
+
+                        <div class="image-overlay"></div>
+                        <div class="photo-caption">
+                            <span>PHOTO / 01</span>
+                            <p>Внутри Draft Punk</p>
+                        </div>
+                    </div>
+
+                    <!-- images/beer.jpg -->
+                    <div class="photo-card glass reveal rounded-3xl">
+                        <img src="images/beer.jpg" alt="Крафтовое пиво в Draft Punk" data-fallback="beer">
+
+                        <div class="image-placeholder">
+                            <div>
+                                <i data-lucide="image" class="mx-auto mb-4 h-8 w-8 text-lime/60"></i>
+                                <strong>images/beer.jpg</strong>
+                                <span>Фото пива</span>
+                            </div>
+                        </div>
+
+                        <div class="image-overlay"></div>
+                        <div class="photo-caption">
+                            <span>PHOTO / 02</span>
+                            <p>Крафтовая подборка</p>
+                        </div>
+                    </div>
+
+                    <!-- images/cocktails.jpg -->
+                    <div class="photo-card glass reveal rounded-3xl">
+                        <img src="images/cocktails.jpg" alt="Настойки Draft Punk" data-fallback="cocktails">
+
+                        <div class="image-placeholder">
+                            <div>
+                                <i data-lucide="image" class="mx-auto mb-4 h-8 w-8 text-lime/60"></i>
+                                <strong>images/cocktails.jpg</strong>
+                                <span>Фото настоек</span>
+                            </div>
+                        </div>
+
+                        <div class="image-overlay"></div>
+                        <div class="photo-caption">
+                            <span>PHOTO / 03</span>
+                            <p>Настойки и миксы</p>
+                        </div>
+                    </div>
+
+                    <!-- images/snacks.jpg -->
+                    <div class="photo-card glass reveal rounded-3xl">
+                        <img src="images/snacks.jpg" alt="Закуски Draft Punk" data-fallback="snacks">
+
+                        <div class="image-placeholder">
+                            <div>
+                                <i data-lucide="image" class="mx-auto mb-4 h-8 w-8 text-lime/60"></i>
+                                <strong>images/snacks.jpg</strong>
+                                <span>Фото закусок</span>
+                            </div>
+                        </div>
+
+                        <div class="image-overlay"></div>
+                        <div class="photo-caption">
+                            <span>PHOTO / 04</span>
+                            <p>Закуски к вечеру</p>
+                        </div>
+                    </div>
+
+                    <!-- images/games.jpg -->
+                    <div class="photo-card glass reveal rounded-3xl">
+                        <img src="images/games.jpg" alt="Настольные игры в Draft Punk" data-fallback="games">
+
+                        <div class="image-placeholder">
+                            <div>
+                                <i data-lucide="image" class="mx-auto mb-4 h-8 w-8 text-lime/60"></i>
+                                <strong>images/games.jpg</strong>
+                                <span>Фото настольных игр</span>
+                            </div>
+                        </div>
+
+                        <div class="image-overlay"></div>
+                        <div class="photo-caption">
+                            <span>PHOTO / 05</span>
+                            <p>Игра начинается здесь</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LOCATION -->
+        <section id="location" class="px-5 py-24 sm:px-8 lg:py-32">
+            <div class="mx-auto max-w-7xl">
+                <div class="reveal max-w-3xl">
+                    <p class="mono text-xs uppercase tracking-[.18em] text-lime">/ coordinates</p>
+
+                    <h2 class="mt-5 text-4xl font-extrabold tracking-[-.06em] sm:text-6xl">
+                        Встретимся
+                        <span class="accent-text">внизу</span>
+                    </h2>
+
+                    <p class="mt-6 max-w-2xl leading-7 text-zinc-400">
+                        Draft Punk находится в Волжском на улице Мира, 42С,
+                        на цокольном этаже.
+                    </p>
+                </div>
+
+                <div class="mt-14 grid gap-5 lg:grid-cols-[.82fr_1.18fr]">
+                    <div class="reveal space-y-5">
+                        <div class="glass rounded-3xl p-6 sm:p-8">
+                            <div class="flex items-start gap-4">
+                                <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-lime/10 text-lime">
+                                    <i data-lucide="map-pin" class="h-5 w-5"></i>
+                                </span>
+
+                                <div>
+                                    <p class="mono text-xs uppercase tracking-[.14em] text-zinc-500">address</p>
+                                    <p class="mt-3 text-xl font-extrabold">Волжский, ул. Мира, 42С</p>
+                                    <p class="mt-2 text-sm text-zinc-500">Цокольный этаж</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="glass rounded-3xl p-6 sm:p-8">
+                            <div class="flex items-start gap-4">
+                                <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-cyber/15 text-violet-300">
+                                    <i data-lucide="clock-3" class="h-5 w-5"></i>
+                                </span>
+
+                                <div class="w-full">
+                                    <p class="mono text-xs uppercase tracking-[.14em] text-zinc-500">opening hours</p>
+
+                                    <div class="mt-4 space-y-3 text-sm">
+                                        <div class="flex justify-between gap-4">
+                                            <span class="text-zinc-400">Пн — Чт</span>
+                                            <span class="font-bold">16:00 — 00:00</span>
+                                        </div>
+
+                                        <div class="flex justify-between gap-4">
+                                            <span class="text-zinc-400">Пт — Сб</span>
+                                            <span class="font-bold text-lime">16:00 — 01:00</span>
+                                        </div>
+
+                                        <div class="flex justify-between gap-4">
+                                            <span class="text-zinc-400">Вс</span>
+                                            <span class="font-bold">16:00 — 00:00</span>
+                                        </div>
+                                    </div>
+
+                                    <p class="mt-5 text-xs leading-5 text-zinc-600">
+                                        Перед публикацией проверьте график и обновите его при необходимости.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a
+                            href="tel:+79375561984"
+                            class="lime-button flex items-center justify-center gap-3 rounded-2xl px-6 py-4 text-sm font-extrabold"
+                        >
+                            <i data-lucide="phone-call" class="h-5 w-5"></i>
+                            Позвонить и забронировать
+                        </a>
+                    </div>
+
+                    <div class="reveal space-y-5">
+                        <div class="glass overflow-hidden rounded-3xl">
+                            <!-- Карта по координатам организации -->
+                            <iframe
+                                title="Карта проезда к Draft Punk"
+                                src="https://yandex.ru/map-widget/v1/?ll=44.799592%2C48.774805&mode=search&ol=geo&ouri=ymapsbm1%3A%2F%2Forg%3Foid%3D135929315035&z=17"
+                                width="100%"
+                                height="430"
+                                frameborder="0"
+                                allowfullscreen="true"
+                                style="display:block; border:0;"
+                            ></iframe>
+                        </div>
+
+                        <div class="street-photo glass">
+                            <!--
+                                ФОТО ФАСАДА:
+                                добавьте файл images/street.jpg
+                            -->
+                            <div class="relative min-h-[280px] overflow-hidden rounded-3xl">
+                                <img
+                                    src="images/street.jpg"
+                                    alt="Как выглядит вход в Draft Punk с улицы"
+                                    data-fallback="street"
+                                >
+
+                                <div class="image-placeholder">
+                                    <div>
+                                        <i data-lucide="image" class="mx-auto mb-4 h-9 w-9 text-lime/60"></i>
+                                        <strong>images/street.jpg</strong>
+                                        <span>Фото входа с улицы</span>
+                                    </div>
+                                </div>
+
+                                <div class="image-overlay"></div>
+
+                                <div class="photo-caption">
+                                    <span>PHOTO / STREET</span>
+                                    <p>Фото входа и вывески</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BOOKING CTA -->
+        <section id="booking" class="px-5 pb-10 pt-16 sm:px-8 lg:pb-20">
+            <div class="reveal glass relative mx-auto max-w-7xl overflow-hidden rounded-[32px] p-7 sm:p-12 lg:p-16">
+                <div class="absolute -right-24 -top-24 h-80 w-80 rounded-full bg-lime/10 blur-[100px]" aria-hidden="true"></div>
+                <div class="absolute -bottom-32 left-1/3 h-80 w-80 rounded-full bg-cyber/15 blur-[110px]" aria-hidden="true"></div>
+
+                <div class="relative grid gap-10 lg:grid-cols-[1fr_auto] lg:items-end">
+                    <div>
+                        <p class="mono text-xs uppercase tracking-[.18em] text-lime">/ ready to connect</p>
+
+                        <h2 class="mt-5 max-w-3xl text-4xl font-extrabold leading-[.98] tracking-[-.06em] sm:text-6xl">
+                            Соберите компанию.
+                            <br>
+                            <span class="accent-text">Остальное найдётся в баре.</span>
+                        </h2>
+
+                        <p class="mt-6 max-w-2xl leading-7 text-zinc-400">
+                            Позвоните, чтобы уточнить наличие мест и забронировать столик.
+                        </p>
+                    </div>
+
+                    <div class="flex flex-col gap-3 sm:flex-row lg:flex-col">
+                        <a
+                            href="tel:+79375561984"
+                            class="lime-button inline-flex items-center justify-center gap-3 rounded-2xl px-7 py-4 text-sm font-extrabold"
+                        >
+                            <i data-lucide="phone" class="h-5 w-5"></i>
+                            +7 (937) 556-19-84
+                        </a>
+
+                        <a
+                            href="https://yandex.ru/maps/10951/volzhskiy/?indoorLevel=1&ll=44.799592%2C48.774805&mode=poi&photos%5Bbusiness%5D=135929315035&poi%5Bpoint%5D=44.799088%2C48.773840&poi%5Buri%5D=ymapsbm1%3A%2F%2Forg%3Foid%3D135929315035&tab=gallery&z=18"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="outline-button inline-flex items-center justify-center gap-3 rounded-2xl px-7 py-4 text-sm font-bold"
+                        >
+                            Открыть в Яндекс Картах
+                            <i data-lucide="map" class="h-4 w-4"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-white/[.08] px-5 py-8 sm:px-8">
+        <div class="mx-auto flex max-w-7xl flex-col gap-5 text-sm text-zinc-600 sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex items-center gap-3">
+                <span class="grid h-8 w-8 place-items-center rounded-lg border border-lime/20 bg-lime/5">
+                    <span class="h-3 w-3 rotate-45 border border-lime"></span>
+                </span>
+                <span>Draft Punk · Волжский</span>
+            </div>
+
+            <p>Крафт · настойки · закуски · игры</p>
+
+            <a href="#home" class="flex items-center gap-2 font-bold text-zinc-400 transition hover:text-lime">
+                Наверх
+                <i data-lucide="arrow-up" class="h-4 w-4"></i>
+            </a>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            lucide.createIcons();
+
+            /*
+             * Загрузка фотографий.
+             * Если файла нет, изображение скрывается,
+             * а рядом остаётся блок с подсказкой имени файла.
+             */
+            document.querySelectorAll("img[data-fallback]").forEach((image) => {
+                image.addEventListener("error", () => {
+                    image.style.display = "none";
+                });
+
+                image.addEventListener("load", () => {
+                    const placeholder = image.parentElement.querySelector(".image-placeholder");
+
+                    if (placeholder) {
+                        placeholder.classList.add("hidden");
+                    }
+                });
+            });
+
+            /*
+             * Мобильное меню
+             */
+            const menuButton = document.getElementById("menuButton");
+            const mobileMenu = document.getElementById("mobileMenu");
+            const mobileLinks = document.querySelectorAll(".mobile-link");
+
+            function closeMenu() {
+                mobileMenu.classList.add("hidden");
+                menuButton.setAttribute("aria-expanded", "false");
+                menuButton.setAttribute("aria-label", "Открыть меню");
+                menuButton.innerHTML = '<i data-lucide="menu" class="h-5 w-5"></i>';
+                lucide.createIcons();
+            }
+
+            function openMenu() {
+                mobileMenu.classList.remove("hidden");
+                menuButton.setAttribute("aria-expanded", "true");
+                menuButton.setAttribute("aria-label", "Закрыть меню");
+                menuButton.innerHTML = '<i data-lucide="x" class="h-5 w-5"></i>';
+                lucide.createIcons();
+            }
+
+            menuButton.addEventListener("click", () => {
+                const isOpen = menuButton.getAttribute("aria-expanded") === "true";
+
+                if (isOpen) {
+                    closeMenu();
+                } else {
+                    openMenu();
+                }
+            });
+
+            mobileLinks.forEach((link) => {
+                link.addEventListener("click", closeMenu);
+            });
+
+            window.addEventListener("resize", () => {
+                if (window.innerWidth >= 1024) {
+                    closeMenu();
+                }
+            });
+
+            /*
+             * Плавное появление секций при скролле
+             */
+            const revealElements = document.querySelectorAll(".reveal");
+            const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+            if (reduceMotion) {
+                revealElements.forEach((element) => {
+                    element.classList.add("visible");
+                });
+            } else {
+                const observer = new IntersectionObserver(
+                    (entries, observerInstance) => {
+                        entries.forEach((entry) => {
+                            if (entry.isIntersecting) {
+                                entry.target.classList.add("visible");
+                                observerInstance.unobserve(entry.target);
+                            }
+                        });
+                    },
+                    {
+                        threshold: 0.12
+                    }
+                );
+
+                revealElements.forEach((element) => observer.observe(element));
+            }
+
+            /*
+             * FAQ-аккордеон
+             */
+            document.querySelectorAll(".faq-trigger").forEach((trigger) => {
+                trigger.addEventListener("click", () => {
+                    const item = trigger.closest(".faq-item");
+                    const isOpen = item.classList.contains("open");
+
+                    document.querySelectorAll(".faq-item").forEach((otherItem) => {
+                        otherItem.classList.remove("open");
+
+                        const otherTrigger = otherItem.querySelector(".faq-trigger");
+                        otherTrigger.setAttribute("aria-expanded", "false");
+                    });
+
+                    if (!isOpen) {
+                        item.classList.add("open");
+                        trigger.setAttribute("aria-expanded", "true");
+                    }
+                });
+            });
+
+            /*
+             * Небольшой tilt-эффект для крупных карточек
+             */
+            const canHover = window.matchMedia("(hover: hover)").matches;
+
+            if (canHover && !reduceMotion) {
+                document.querySelectorAll(".hover-card").forEach((card) => {
+                    card.addEventListener("pointermove", (event) => {
+                        const rect = card.getBoundingClientRect();
+
+                        const x = (event.clientX - rect.left) / rect.width;
+                        const y = (event.clientY - rect.top) / rect.height;
+
+                        const rotateX = (y - 0.5) * -3;
+                        const rotateY = (x - 0.5) * 3;
+
+                        card.style.transform =
+                            `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-7px)`;
+                    });
+
+                    card.addEventListener("pointerleave", () => {
+                        card.style.transform = "";
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
